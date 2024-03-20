@@ -1,0 +1,21 @@
+# Ignoring IDE files
+/.vscode/launch.json
+
+# Ignoring environment file
+/.env
+
+# Ignoring dependencies
+/node_modules/
+/vendor/
+
+# Ignoring everything in /public, but index.php and assets
+/public/*
+!/public/assets
+!/public/index.php
+
+# Ignoring everything in /.secrets, to keep them secure.
+/.secrets/*
+!/.secrets/.gitkeep
+
+# Ignoring any cache file
+*.cache

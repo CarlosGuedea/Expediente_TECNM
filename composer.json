@@ -1,0 +1,29 @@
+{
+    "name": "phpweb/app",
+    "type": "project",
+    "suggest": {
+        "francerz/exfpdf": "A FPDF extended version that brings power an flexibility"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "require": {
+        "francerz/console": "^0.1",
+        "francerz/http": "^0.3",
+        "francerz/mysql-builder": "^v0.5",
+        "francerz/webapp-commons": "^0.1.0",
+        "francerz/webapp-model-utils": "^0.1",
+        "francerz/webapp-render-utils": "^0.1",
+        "itcolima/siitec-api-client": "^0.1.77",
+        "slim/slim": "^4.9",
+        "slim/psr7": "^1.5",
+        "vlucas/phpdotenv": "^5.3"
+    },
+    "config": {
+        "platform": {
+            "php": "7.4"
+        }
+    }
+}

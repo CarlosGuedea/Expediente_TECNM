@@ -1,0 +1,299 @@
+{
+	"Model": {
+        "scope": "php",
+		"prefix": "model",
+		"description": "Creates a model compatible with francerz/sql-builder",
+		"body": [
+			"",
+			"namespace App\\Models;",
+			"",
+			"use Francerz\\SqlBuilder\\DatabaseManager;",
+			"use Francerz\\SqlBuilder\\Query;",
+            "use Francerz\\WebappModelUtils\\ModelParams;",
+			"",
+            "/**",
+            " *  Class.........: $TM_FILENAME_BASE",
+            " *  Database alias: $1",
+            " *  Table.........: $2",
+            " *  Table alias...: $3",
+            " *  Primary key...: $4",
+            " */",
+			"class $TM_FILENAME_BASE extends AbstractModel",
+			"{",
+            "    public \\$$4;",
+            "",
+			"    public static function getQuery(array \\$params = [])",
+			"    {",
+            "        \\$params = new ModelParams(\\$params);",
+            "",
+			"        \\$query = Query::selectFrom(['$3' => '$2']);",
+            "",
+            "        if (isset(\\$params['$4'])) {",
+            "            \\$query->where('$3.$4', \\$params['$4']);",
+            "        }",
+            "",
+            "        // DO NOT REMOVE, checks if passed params are not used in code block.",
+            "        \\$params->checkUsed();",
+			"        return \\$query;",
+			"    }",
+			"",
+			"    /**",
+			"     *  @return self[]",
+			"     */",
+			"    public static function getRows(array \\$params = [])",
+			"    {",
+			"        \\$db = DatabaseManager::connect('$1');",
+			"        \\$query = static::getQuery(\\$params);",
+			"        \\$result = \\$db->executeSelect(\\$query);",
+			"        return \\$result->toArray(self::class);",
+			"    }",
+			"",
+			"    public static function getFirst(array \\$params = [])",
+			"    {",
+			"        \\$rows = static::getRows(\\$params);",
+			"        return reset(\\$rows) ?: null;",
+			"    }",
+			"",
+			"    public static function getLast(array \\$params = [])",
+			"    {",
+			"        \\$rows = static::getRows(\\$params);",
+			"        return end(\\$rows) ?: null;",
+			"    }",
+            "",
+            "    public static function insert($TM_FILENAME_BASE \\$data, \\$columns = null)",
+            "    {",
+            "        \\$db = DatabaseManager::connect('$1');",
+            "        \\$query = Query::insertInto('$2', \\$data, \\$columns);",
+            "        \\$result = \\$db->executeInsert(\\$query);",
+            "        \\$data->$4 = \\$result->getInsertedId();",
+            "        return \\$result;",
+            "    }",
+            "",
+            "    public static function update($TM_FILENAME_BASE \\$data, \\$matching = null, \\$columns = null)",
+            "    {",
+            "        \\$db = DatabaseManager::connect('$1');",
+            "        \\$query = Query::update('$2', \\$data, \\$matching, \\$columns);",
+            "        \\$result = \\$db->executeUpdate(\\$query);",
+            "        return \\$result;",
+            "    }",
+			"}",
+			""
+		]
+	},
+    "Model Insert": {
+        "scope": "php",
+        "prefix": "model insert",
+        "body": [
+            "public static function insert($TM_FILENAME_BASE \\$data, \\$columns = null)",
+            "{",
+            "    \\$db = DatabaseManager::connect($1);",
+            "    \\$query = Query::insertInto($2, \\$data, \\$columns);",
+            "    \\$result = \\$db->executeInsert(\\$query);",
+            "    \\$data->$3 = \\$result->getInsertedId();",
+            "    return \\$result;",
+            "}",
+        ]
+    },
+    "Model Update": {
+        "scope": "php",
+        "prefix": "model update",
+        "body": [
+            "public static function update($TM_FILENAME_BASE \\$data, \\$matching = null, \\$columns = null)",
+            "{",
+            "    \\$db = DatabaseManager::connect($1);",
+            "    \\$query = Query::update($2, \\$data, \\$matching, \\$columns);",
+            "    \\$result = \\$db->executeUpdate(\\$query);",
+            "    return \\$result;",
+            "}",
+        ]
+    },
+    "Model Upsert": {
+        "scope": "php",
+        "prefix": "model upsert",
+        "body": [
+            "public static function upsert($TM_FILENAME_BASE \\$data, \\$keys = [], \\$columns = [])",
+            "{",
+            "    \\$db = DatabaseManager::connect($1);",
+            "    \\$query = Query::upsert($2, \\$data, \\$keys, \\$columns);",
+            "    \\$result = \\$db->executeUpsert(\\$query);",
+            "    return \\$result;",
+            "}",
+        ]
+    },
+    "Model Query Parameter": {
+        "scope": "php",
+        "prefix": "model param",
+        "body": [
+            "if (isset(\\$params[$1])) {",
+            "    $2",
+            "}"
+        ]
+    },
+    "Controller": {
+        "scope": "php",
+        "prefix": "controller",
+        "isFileTemplate": true,
+        "body": [
+            "",
+            "namespace App\\Controllers;",
+            "",
+            "use App\\Application;",
+            "use Psr\\Http\\Message\\ResponseInterface as IResponse;",
+            "use Psr\\Http\\Message\\ServerRequestInterface as IServerRequest;",
+            "",
+            "class $TM_FILENAME_BASE extends AbstractController",
+            "{",
+            "    public function indexGet(IServerRequest \\$request, IResponse \\$response, array \\$params): IResponse",
+            "    {",
+            "        return \\$response;",
+            "    }",
+            "}",
+            ""
+        ]
+    },
+    "Controller Get":{
+        "scope": "php",
+        "prefix": "controller method get",
+        "body": [
+            "public function $1(IServerRequest \\$request, IResponse \\$response, array \\$params): IResponse",
+            "{",
+            "    return Application::getRenderer()->render$2($3);",
+            "}",
+        ]
+    },
+    "Controller Post":{
+        "scope": "php",
+        "prefix": "controller method post",
+        "body": [
+            "public function $1(IServerRequest \\$request, IResponse \\$response, array \\$params): IResponse",
+            "{",
+            "    return Application::getRenderer()->renderRedirect($2);",
+            "}",
+        ]
+    },
+    "Render View":{
+        "scope": "php",
+        "prefix": "render view",
+        "body": [
+            "return Application::getRenderer()->renderView('$1', [$2]);"
+        ]
+    },
+    "Render Redirect":{
+        "scope": "php",
+        "prefix": "render redirect",
+        "body": [
+            "return Application::getRenderer()->renderRedirect($1);"
+        ]
+    },
+    "Render File":{
+        "scope": "php",
+        "prefix": "render file",
+        "body": [
+            "return Application::getRenderer()->renderFile($1);"
+        ]
+    },
+    "Render Json":{
+        "scope": "php",
+        "prefix": "render json",
+        "body": [
+            "return Application::getRenderer()->renderJson($1);"
+        ]
+    },
+    "Middleware": {
+        "scope": "php",
+        "prefix": "middleware",
+        "isFileTemplate": true,
+        "body": [
+            "",
+            "namespace App\\Middlewares;",
+            "",
+            "use Psr\\Http\\Message\\ResponseInterface as IResponse;",
+            "use Psr\\Http\\Message\\ServerRequestInterface as IServerRequest;",
+            "use Psr\\Http\\Server\\RequestHandlerInterface as IRequestHandler;",
+            "",
+            "class $TM_FILENAME_BASE extends AbstractMiddleware",
+            "{",
+            "    public function process(IServerRequest \\$request, IRequestHandler \\$handler): IResponse",
+            "    {",
+            "        return \\$handler->handle(\\$request);",
+            "    }",
+            "}",
+            ""
+        ]
+    },
+    "Route Group": {
+        "scope": "php",
+        "prefix": "route group",
+        "body": [
+            "\\$route->group($1, function (RouteCollectorProxy \\$route) {",
+            "    $2",
+            "});"
+        ]
+    },
+    "Route Get": {
+        "scope": "php",
+        "prefix": "route get",
+        "body": [
+            "\\$route->get($1, [$2, $3]);"
+        ]
+    },
+    "Route Post": {
+        "scope": "php",
+        "prefix": "route post",
+        "body": [
+            "\\$route->post($1, [$2, $3]);"
+        ]
+    },
+    "Session var": {
+        "scope": "php",
+        "prefix": "session var",
+        "body": [
+            "/** @var $type */",
+            "private static \\$$varName;",
+            "public static function set$UpperVarName($type \\$value)",
+            "{",
+            "    static::set('$varName', \\$value);",
+            "    static::\\$$varName = \\$value;",
+            "}",
+            "public static function get$UpperVarName(): ?$type",
+            "{",
+            "    if (!isset(static::\\$$varName)) {",
+            "        static::\\$$varName = static::get('$varName');",
+            "    }",
+            "    return static::\\$$varName;",
+            "}",
+            "public static function unset$UpperVarName()",
+            "{",
+            "    return static::unset('$varName');",
+            "}"
+        ]
+    },
+    "View" : {
+        "prefix": "view",
+        "isFileTemplate": true,
+        "body": [
+            "<?=\\$layout = \\$view->loadLayout('@layouts/default')?>",
+            "<?=\\$layout->startSection('content')?>",
+            "$1",
+            "<?=\\$layout->endSection()?>"
+        ]
+    },
+    "View layout": {
+        "prefix": "view layout",
+        "isFileTemplate": true,
+        "body": [
+            "<!DOCTYPE html>",
+            "<html lang=\"en\">",
+            "<head>",
+            "    <meta charset=\"UTF-8\">",
+            "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">",
+            "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
+            "    <title>$1</title>",
+            "</head>",
+            "<body>",
+            "<?=\\$layout->section('content')?>",
+            "</body>",
+            "</html>"
+        ]
+    }
+}

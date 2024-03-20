@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+    php:
+        build:
+            context: . # Ruta al directorio donde está el Dockerfile
+        ports:
+            - 40000:80 # Puerto para acceder a la aplicación web
+        environment:
+            DATABASE_DEFAULT_HOST: mysql
+            DATABASE_DEFAULT_PORT: 3306
+            DATABASE_DEFAULT_NAME: siitec_default
+            DATABASE_DEFAULT_USER: siitec_default
+            DATABASE_DEFAULT_PSWD_FILE: /run/secrets/db_password
+        volumes:
+            - .:/app
+            - app_data:/var/www/data/siitec_default
+        secrets:
+            - db_password
+    mysql:
+        image: mysql:8.0.34
+        environment:
+            MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+            MYSQL_DATABASE: siitec_default
+            MYSQL_USER: siitec_default
+            MYSQL_PASSWORD_FILE: /run/secrets/db_password
+        expose:
+            - 3306
+        ports:
+            - 33060:3306
+        volumes:
+            - mysql_data:/var/lib/mysql # Almacena los datos de MySQL fuera del contenedor
+        secrets:
+            - db_root_password
+            - db_password
+
+secrets:
+    db_root_password:
+        file: ./.secrets/db_root_password.txt
+    db_password:
+        file: ./.secrets/db_password.txt
+
+volumes:
+    app_data:
+    mysql_data:
